@@ -79,13 +79,6 @@ target_link_libraries(diffflow ${ROOT_LIBRARIES} qncorrflow FlowBase)
 add_library(correlationflow SHARED ${CORR_SOURCES})
 target_link_libraries(correlationflow ${ROOT_LIBRARIES} FlowBase)
 
-## Generate dictionary
-#ROOT_GENERATE_DICTIONARY(G__Flow ${HEADERS} LINKDEF LinkDef.h)
-## Create a shared library with generated dictionary
-#add_library(flow SHARED ${SOURCES} G__Flow)
-#target_include_directories(flow PUBLIC ${CMAKE_SOURCE_DIR} ${QNCORRECT_INC} ${REDUCEDINC})
-#target_link_libraries(flow ${ROOT_LIBRARIES} ${QNCORRECT_LIB} ${REDUCEDEVENT_LIB})
-#
 # Create a main program using the library
 add_executable(main ${EXE_SOURCES})
 target_link_libraries(main correlationflow diffflow baseflow ${ROOT_LIBRARIES} ${QNCORRECT_LIB})
