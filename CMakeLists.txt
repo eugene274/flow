@@ -81,8 +81,7 @@ add_library(correlationflow SHARED ${CORR_SOURCES})
 target_link_libraries(correlationflow ${ROOT_LIBRARIES} FlowBase)
 
 # Create a main program using the library
-add_executable(main ${EXE_SOURCES})
-target_link_libraries(main correlationflow diffflow baseflow ${ROOT_LIBRARIES} ${QNCORRECT_LIB})
-target_include_directories(main PUBLIC ${EXE_HEADERS} ${QNCORRECT_INC})
+add_executable(analysis ${EXE_SOURCES})
+target_link_libraries(analysis correlationflow diffflow baseflow ${ROOT_LIBRARIES} ${QNCORRECT_LIB})
 
 add_subdirectory(test)
