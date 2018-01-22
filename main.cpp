@@ -8,9 +8,9 @@
 #include "TTree.h"
 #include "TTreeReader.h"
 #include "Correlation/Correlation.h"
-#include "SimpleTask.h"
+#include "CorrelationTask.h"
 #include "Base/Stats.h"
-#include "TestTask.h"
+#include "CorrectionTask.h"
 #include <iomanip>
 #include <chrono>
 
@@ -18,11 +18,11 @@ int main(int argc, char **argv) {
   auto start = std::chrono::system_clock::now();
   ROOT::EnableImplicitMT(2);
   if (strcmp(argv[3], "correct")==0) {
-    Qn::TestTask task(argv[1], argv[2], "DstTree");
+    Qn::CorrectionTask task(argv[1], argv[2], "DstTree");
     task.Run();
   }
   if (strcmp(argv[3], "analysis")==0) {
-    SimpleTask st(argv[1], "tree");
+    CorrelationTask st(argv[1], "tree");
     st.Run();
   }
   auto end = std::chrono::system_clock::now();

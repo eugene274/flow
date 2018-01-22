@@ -6,11 +6,11 @@
 #include <QnCorrections/QnCorrectionsLog.h>
 #include <random>
 #include <THnSparse.h>
-#include "TestTask.h"
+#include "CorrectionTask.h"
 
 namespace Qn {
 
-TestTask::TestTask(std::string filelist, std::string incalib, std::string treename) :
+CorrectionTask::CorrectionTask(std::string filelist, std::string incalib, std::string treename) :
     out_file_(new TFile("output.root", "RECREATE")),
     in_calibration_file_(new TFile(incalib.data(), "READ")),
     out_calibration_file_(new TFile("qn.root", "RECREATE")),
@@ -25,7 +25,7 @@ TestTask::TestTask(std::string filelist, std::string incalib, std::string treena
   out_tree_raw = std::move(treeraw);
 }
 
-void TestTask::Run() {
+void CorrectionTask::Run() {
   Initialize();
   QnCorrectionsSetTracingLevel(kError);
   std::cout << "Processing..." << std::endl;
@@ -38,7 +38,7 @@ void TestTask::Run() {
   Finalize();
 }
 
-void TestTask::Initialize() {
+void CorrectionTask::Initialize() {
   using Axes = std::vector<Qn::Axis>;
   Axis ptaxis("Pt", {0.2, 5, 10.});
   Axis etaaxis("Eta", 2, -0.8, 0.8);
@@ -69,7 +69,7 @@ void TestTask::Initialize() {
   manager.Initialize(in_calibration_file_);
 }
 
-void TestTask::Process() {
+void CorrectionTask::Process() {
   manager.Reset();
   Differential::Interface::DataFiller filler;
 
@@ -81,7 +81,7 @@ void TestTask::Process() {
   out_tree_raw->Fill();
 }
 
-void TestTask::Finalize() {
+void CorrectionTask::Finalize() {
   manager.Finalize();
   out_calibration_file_->cd();
   manager.SaveCorrectionHistograms();

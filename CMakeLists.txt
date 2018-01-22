@@ -10,8 +10,8 @@ if (APPLE)
 endif (APPLE)
 
 set(EXE_SOURCES
-        SimpleTask.cpp
-        TestTask.cpp
+        CorrelationTask.cpp
+        CorrectionTask.cpp
         main.cpp)
 
 set(CORR_SOURCES
@@ -28,8 +28,8 @@ set(DIFF_SOURCES
         DifferentialCorrection/CorrectionManager.cpp
         DifferentialCorrection/Detector.cpp
         DifferentialCorrection/Interface/DataFiller.cpp
-        DifferentialCorrection/HistogramManager.cpp
-        )
+        DifferentialCorrection/Interface/VarManager.cpp)
+        DifferentialCorrection/HistogramManager.cpp)
 
 set(BASE_SOURCES
         Base/DataVector.cpp
@@ -46,6 +46,7 @@ string(REPLACE ".cpp" ".h" BASE_HEADERS "${BASE_SOURCES}")
 string(REPLACE ".cpp" ".h" DIFF_HEADERS "${DIFF_SOURCES}")
 string(REPLACE ".cpp" ".h" CORR_HEADERS "${CORR_SOURCES}")
 string(REPLACE ".cpp" ".h" QNCORR_HEADERS "${QNCORR_SOURCES}")
+string(REPLACE ".cpp" ".h" EXE_HEADERS "${EXE_SOURCES}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")

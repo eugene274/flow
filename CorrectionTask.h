@@ -35,12 +35,12 @@ namespace Qn {
  * Qn vector analysis TestTask. It is to be configured by the user.
  * @brief TestTask for analysing qn vectors
  */
-class TestTask {
+class CorrectionTask {
  public:
-  TestTask() = default;
-  TestTask(std::string filelist, std::string incalib, std::string treename);
-  TestTask(std::array<std::shared_ptr<TFile>, 4> files);
-  ~TestTask() = default;
+  CorrectionTask() = default;
+  CorrectionTask(std::string filelist, std::string incalib, std::string treename);
+  CorrectionTask(std::array<std::shared_ptr<TFile>, 4> files);
+  ~CorrectionTask() = default;
   void Run();
 
  private:

@@ -6,14 +6,14 @@
 #include <TFile.h>
 #include <TLegend.h>
 
-#include "SimpleTask.h"
+#include "CorrelationTask.h"
 #include "Base/DataContainerHelper.h"
 
-SimpleTask::SimpleTask(std::string filelist, std::string treename) :
+CorrelationTask::CorrelationTask(std::string filelist, std::string treename) :
     in_tree_(this->MakeChain(std::move(filelist), treename)),
     reader_(new TTreeReader(in_tree_.get())) {}
 
-void SimpleTask::Configure(Qn::CorrelationManager &a) {
+void CorrelationTask::Configure(Qn::CorrelationManager &a) {
 
   auto XX = [](const std::vector<Qn::QVector> &a) {
     return 1.0 + a[0].x(1)*a[1].x(1);
@@ -26,7 +26,7 @@ void SimpleTask::Configure(Qn::CorrelationManager &a) {
   a.AddCorrelation("TEST","DET1, DET1", XX);
 }
 
-void SimpleTask::Run() {
+void CorrelationTask::Run() {
   Qn::CorrelationManager a(reader_);
   Configure(a);
   int events = 1;
@@ -64,7 +64,7 @@ void SimpleTask::Run() {
 //  auto v2tpcva = tpcva.Apply(rvatpcvc, divide);
 
 
-std::unique_ptr<TChain> SimpleTask::MakeChain(std::string filename, std::string treename) {
+std::unique_ptr<TChain> CorrelationTask::MakeChain(std::string filename, std::string treename) {
   std::unique_ptr<TChain> chain(new TChain(treename.data()));
   std::ifstream in;
   in.open(filename);

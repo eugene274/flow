@@ -12,10 +12,10 @@
 #include "Correlation/CorrelationManager.h"
 
 
-class SimpleTask {
+class CorrelationTask {
  public:
-  SimpleTask() = default;
-  SimpleTask(std::string filelist, std::string treename);
+  CorrelationTask() = default;
+  CorrelationTask(std::string filelist, std::string treename);
 
   void Configure(Qn::CorrelationManager &manager);
   void Run();
