@@ -16,7 +16,7 @@
 
 int main(int argc, char **argv) {
   auto start = std::chrono::system_clock::now();
-  ROOT::EnableImplicitMT(2);
+//  ROOT::EnableImplicitMT(2);
   if (strcmp(argv[3], "correct")==0) {
     Qn::CorrectionTask task(argv[1], argv[2], "DstTree");
     task.Run();
