@@ -28,7 +28,7 @@ set(DIFF_SOURCES
         DifferentialCorrection/CorrectionManager.cpp
         DifferentialCorrection/Detector.cpp
         DifferentialCorrection/Interface/DataFiller.cpp
-        DifferentialCorrection/Interface/VarManager.cpp)
+        DifferentialCorrection/Interface/VarManager.cpp
         DifferentialCorrection/HistogramManager.cpp)
 
 set(BASE_SOURCES
