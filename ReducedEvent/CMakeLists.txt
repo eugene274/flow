@@ -4,7 +4,7 @@ project(flow)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_cpp_STANDARD 14)
 
-set(SOURCES AliReducedBaseEvent.cpp
+set(REDUCEDEVENT_SOURCES AliReducedBaseEvent.cpp
         AliReducedCaloClusterInfo.cpp
         AliReducedEventPlaneInfo.cpp
         AliReducedPairInfo.cpp
@@ -19,28 +19,18 @@ set(SOURCES AliReducedBaseEvent.cpp
         AliReducedInfoCut.cpp
         AliReducedTrackInfo.cpp)
 
-string(REPLACE ".cpp" ".h" HEADERS "${SOURCES}")
+string(REPLACE ".cpp" ".h" REDUCEDEVENT_HEADERS "${REDUCEDEVENT_SOURCES}")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
-# Telling CMake where to find the ROOT installation.
-list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
+ROOT_GENERATE_DICTIONARY(G__ReducedEvent ${REDUCEDEVENT_HEADERS} LINKDEF ReducedEventLinkDef.h)
+add_library(ReducedEvent SHARED ${REDUCEDEVENT_SOURCES} G__ReducedEvent)
+target_compile_definitions(ReducedEvent PUBLIC "-DUSE_ROOT")
+target_include_directories(ReducedEvent PRIVATE ${ROOT_INCLUDE_DIRS})
+target_include_directories(ReducedEvent PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ReducedEvent ROOT::Core ROOT::MathMore ROOT::MathCore ROOT::Hist ROOT::TreePlayer ROOT::Tree)
 
-#---Locate the ROOT package and defines a number of variables (e.g. ROOT_INCLUDE_DIRS)
-find_package(ROOT REQUIRED COMPONENTS Core MathCore RIO Hist)
-
-# Define useful ROOT functions and macros (e.g. ROOT_GENERATE_DICTIONARY)
-include(${ROOT_USE_FILE})
-add_definitions(${ROOT_CXX_FLAGS})
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${ROOT_INCLUDE_DIRS})
-
-ROOT_GENERATE_DICTIONARY(G__ReducedEv ${HEADERS} LINKDEF ReducedEventLinkDef.h)
-add_library(reducedev SHARED ${SOURCES} G__ReducedEv)
-target_link_libraries(reducedev ${ROOT_LIBRARIES} )
-
-install(TARGETS reducedev DESTINATION lib)
-install(FILES ${HEADERS} DESTINATION include)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libReducedEv.rootmap DESTINATION lib)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libReducedEv_rdict.pcm DESTINATION lib)
+install(TARGETS ReducedEvent DESTINATION lib)
+install(FILES ${QNCORR_HEADERS} DESTINATION include)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libReducedEvent_rdict.pcm DESTINATION lib)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libReducedEvent.rootmap DESTINATION lib)

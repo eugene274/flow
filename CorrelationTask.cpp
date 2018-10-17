@@ -81,8 +81,8 @@ void CorrelationTask::Configure(Qn::CorrelationManager &a) {
 //    a.AddCorrelation("TPC_T0C", "TPC_R, T0C", scalar, 10, Qn::Sampler::Method::BOOTSTRAP);
 //    a.AddCorrelation("T0A_T0C", "T0A, T0C", scalar, 10, Qn::Sampler::Method::BOOTSTRAP);
 //
-  a.AddCorrelation("ZDCA_Mag","ZDCA",mag);
-  a.AddCorrelation("ZDCC_Mag","ZDCC",mag);
+//  a.AddCorrelation("ZDCA_Mag","ZDCA",mag);
+//  a.AddCorrelation("ZDCC_Mag","ZDCC",mag);
 //  a.AddCorrelation("ZDCAC_XX","ZDCA, ZDCC",[](const std::vector<Qn::QVector> &a){return -a[0].x(1)*a[1].x(1);});
 //    a.AddCorrelation("ZDCAC_YY","ZDCA, ZDCC",[](const std::vector<Qn::QVector> &a){return a[0].y(1)*a[1].y(1);});
 //    a.AddCorrelation("ZDCAC_YX","ZDCA, ZDCC",[](const std::vector<Qn::QVector> &a){return a[0].y(1)*a[1].x(1);});

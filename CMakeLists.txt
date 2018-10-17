@@ -92,6 +92,7 @@ if(ROOT_FOUND)
     message(STATUS "Using ROOT: ${ROOT_VERSION} <${ROOT_CONFIG}>")
 
     add_subdirectory(QnCorrections)
+    add_subdirectory(ReducedEvent)
 
     ROOT_GENERATE_DICTIONARY(G__FlowBase ${BASE_HEADERS} ${QNCORR_HEADERS} LINKDEF Base/BaseLinkDef.h)
     add_library(FlowBase SHARED ${BASE_SOURCES} G__FlowBase)
@@ -104,7 +105,7 @@ if(ROOT_FOUND)
     target_compile_definitions(DifferentialCorrection PUBLIC "-DUSE_ROOT")
     target_include_directories(DifferentialCorrection PRIVATE ${ROOT_INCLUDE_DIRS})
     target_include_directories(DifferentialCorrection PUBLIC DifferentialCorrection DifferentialCorrection/Interface)
-    target_link_libraries(DifferentialCorrection QnCorrections FlowBase ${ROOT_LIBRARIES})
+    target_link_libraries(DifferentialCorrection QnCorrections FlowBase ${ROOT_LIBRARIES} ReducedEvent)
 
     add_library(Correlation SHARED ${CORR_SOURCES})
     target_compile_definitions(Correlation PUBLIC "-DUSE_ROOT")
@@ -114,4 +115,13 @@ if(ROOT_FOUND)
 
     add_subdirectory(test)
 
+    add_executable(analysis main.cpp CorrectionTask.cpp CorrelationTask.cpp)
+    target_compile_definitions(analysis PUBLIC "-DUSE_ROOT")
+    target_include_directories(analysis PRIVATE ${ROOT_INCLUDE_DIRS})
+    target_include_directories(analysis PRIVATE ${CMAKE_SOURCE_DIR})
+    target_link_libraries(analysis QnCorrections ReducedEvent FlowBase DifferentialCorrection Correlation ${ROOT_LIBRARIES})
+
+
+
 endif()
+
