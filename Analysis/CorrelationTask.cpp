@@ -1,15 +1,17 @@
 //
 // Created by Lukas Kreis on 13.11.17.
 //
-#include <utility>
-#include <TCanvas.h>
-#include <TFile.h>
-#include <TLegend.h>
-#include <ReducedEvent/AliReducedVarManager.h>
-#include <TTreeReaderValue.h>
 
 #include "CorrelationTask.h"
-#include "Base/DataContainerHelper.h"
+
+#include <utility>
+
+#include "TCanvas.h"
+#include "TFile.h"
+#include "AliReducedVarManager.h"
+#include "TTreeReaderValue.h"
+
+#include "DataContainerHelper.h"
 
 CorrelationTask::CorrelationTask(std::string filelist, std::string treename) :
     in_tree_(this->MakeChain(std::move(filelist), treename)),

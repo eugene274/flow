@@ -7,9 +7,9 @@
 
 #include <TChain.h>
 #include <TTreeReader.h>
-#include "Base/DataContainer.h"
-#include "Correlation/Correlation.h"
-#include "Correlation/CorrelationManager.h"
+#include "DataContainer.h"
+#include "Correlation.h"
+#include "CorrelationManager.h"
 
 #define VAR AliReducedVarManager
 

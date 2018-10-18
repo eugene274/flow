@@ -8,29 +8,29 @@
 #include <vector>
 #include <array>
 #include <random>
-#include "QnCorrections/QnCorrectionsProfile3DCorrelations.h"
-#include "QnCorrections/QnCorrectionsProfileCorrelationComponents.h"
-#include "QnCorrections/QnCorrectionsDetectorConfigurationChannels.h"
-#include "QnCorrections/QnCorrectionsDetectorConfigurationBase.h"
-#include <QnCorrections/QnCorrectionsDetectorConfigurationTracks.h>
-#include <QnCorrections/QnCorrectionsQnVectorRecentering.h>
-#include <QnCorrections/QnCorrectionsQnVectorTwistAndRescale.h>
-#include <QnCorrections/QnCorrectionsCutSetBit.h>
-#include <QnCorrections/QnCorrectionsCutWithin.h>
-#include <QnCorrections/QnCorrectionsInputGainEqualization.h>
-#include <QnCorrections/QnCorrectionsQnVectorAlignment.h>
+#include "QnCorrectionsProfile3DCorrelations.h"
+#include "QnCorrectionsProfileCorrelationComponents.h"
+#include "QnCorrectionsDetectorConfigurationChannels.h"
+#include "QnCorrectionsDetectorConfigurationBase.h"
+#include "QnCorrectionsDetectorConfigurationTracks.h"
+#include "QnCorrectionsQnVectorRecentering.h"
+#include "QnCorrectionsQnVectorTwistAndRescale.h"
+#include "QnCorrectionsCutSetBit.h"
+#include "QnCorrectionsCutWithin.h"
+#include "QnCorrectionsInputGainEqualization.h"
+#include "QnCorrectionsQnVectorAlignment.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TTreeReader.h"
 
-#include "QnCorrections/QnCorrectionsManager.h"
-#include "Base/DataContainer.h"
-#include "DifferentialCorrection/EventInfo.h"
-#include "ReducedEvent/AliReducedEventInfo.h"
-#include "ReducedEvent/AliReducedVarManager.h"
-#include "ReducedEvent/AliReducedTrackInfo.h"
-#include "ReducedEvent/AliReducedBaseTrack.h"
-#include "DifferentialCorrection/CorrectionManager.h"
+#include "QnCorrectionsManager.h"
+#include "DataContainer.h"
+#include "EventInfo.h"
+#include "AliReducedEventInfo.h"
+#include "AliReducedVarManager.h"
+#include "AliReducedTrackInfo.h"
+#include "AliReducedBaseTrack.h"
+#include "CorrectionManager.h"
 
 #define VAR AliReducedVarManager
 
