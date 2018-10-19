@@ -1,12 +1,12 @@
 //
 // Created by Lukas Kreis on 29.06.17.
 //
-#include <memory>
-
-#include "iostream"
-#include "QnCorrectionsLog.h"
-#include "THnSparse.h"
 #include "CorrectionTask.h"
+
+#include <memory>
+#include <iostream>
+#include "QnCorrectionsLog.h"
+
 
 namespace Qn {
 
@@ -61,7 +61,7 @@ void CorrectionTask::Initialize() {
   manager_.AddVariable("TPCEta", VAR::kEta, 1);
   manager_.AddVariable("TPCPhi", VAR::kPhi, 1);
   manager_.AddVariable("TPCNCls", VAR::kTPCncls, 1);
-  manager_.AddVariable("TPCOnlyTracks", VAR::kFilterBit+0, 1);
+  manager_.AddVariable("TPCOnlyTracks", VAR::kFilterBit + 0, 1);
   manager_.AddVariable("TPCQualityFlags", VAR::kQualityTrackFlags, 1);
   manager_.AddVariable("TPCHybrid", VAR::kFilterBit + 8, 1);
   manager_.AddVariable("TPCHybrid+", VAR::kFilterBit + 9, 1);
@@ -165,14 +165,18 @@ void CorrectionTask::Initialize() {
   manager_.SetCorrectionSteps("V0A", confV0);
   manager_.AddHisto1D("V0A", {{"V0AChannels", 32, 0, 32}}, "V0AMultChannel");
   manager_.AddHisto2D("V0A", {{"V0ARingChannel", 4, 0, 4}, {"V0AChannels", 32, 0, 32}}, "V0AMultChannel");
-  manager_.AddHisto2D("V0A", {{"V0APhiChannel", 8, -TMath::Pi(), TMath::Pi()}, {"V0ARingChannel", 4, 0, 4}}, "V0AMultChannel");
+  manager_.AddHisto2D("V0A",
+                      {{"V0APhiChannel", 8, -TMath::Pi(), TMath::Pi()}, {"V0ARingChannel", 4, 0, 4}},
+                      "V0AMultChannel");
   //VZERO C
   manager_.AddDetector("V0C", DetectorType::CHANNEL, "V0CPhiChannel", "V0CMultChannel", {}, {2, 3});
   manager_.AddCut("V0C", {"V0CMultChannel"}, cut_mult);
   manager_.SetCorrectionSteps("V0C", confV0);
   manager_.AddHisto1D("V0C", {{"V0CChannels", 32, 0, 32}}, "V0CMultChannel");
   manager_.AddHisto2D("V0C", {{"V0CRingChannel", 4, 0, 4}, {"V0CChannels", 32, 0, 32}}, "V0CMultChannel");
-  manager_.AddHisto2D("V0C", {{"V0CPhiChannel", 8, -TMath::Pi(), TMath::Pi()}, {"V0CRingChannel", 4, 0, 4}}, "V0CMultChannel");
+  manager_.AddHisto2D("V0C",
+                      {{"V0CPhiChannel", 8, -TMath::Pi(), TMath::Pi()}, {"V0CRingChannel", 4, 0, 4}},
+                      "V0CMultChannel");
 
 //   Config for ZDC A and ZDC C
   auto confZDC = [](QnCorrectionsDetectorConfigurationBase *config) {
@@ -227,7 +231,6 @@ void CorrectionTask::Initialize() {
   manager_.AddHisto1D("T0C", {{"T0CChannels", 12, 0, 12}}, "T0CMult");
   manager_.AddHisto1D("T0C", {{"T0CPhi", 12, -TMath::Pi(), TMath::Pi()}}, "T0CMult");
 
-
   if (FMD) {
     manager_.AddVariable("FMDAPhi", VAR::Variables::kFMDAPhi, 1200);
     manager_.AddVariable("FMDAMult", VAR::Variables::kFMDAWeight, 1200);
@@ -250,19 +253,17 @@ void CorrectionTask::Initialize() {
     manager_.SetCorrectionSteps("FMDA", confFMD);
     manager_.AddHisto1D("FMDA", {{"FMDAChannels", 1200, 0, 1200}}, "FMDAMult");
     manager_.AddHisto1D("FMDA", {{"FMDAPhi", 20, 0, 2*TMath::Pi()}}, "FMDAMult");
-    manager_.AddHisto2D("FMDA", {{"FMDAPhi", 20, 0, 2*TMath::Pi()},{"FMDAEta", 100, -4, 6}}, "FMDAMult");
+    manager_.AddHisto2D("FMDA", {{"FMDAPhi", 20, 0, 2*TMath::Pi()}, {"FMDAEta", 100, -4, 6}}, "FMDAMult");
     manager_.AddCut("FMDA", {"FMDAMult"}, [](double &mult) { return mult > 1e-6; });
 
     manager_.AddDetector("FMDC", DetectorType::CHANNEL, "FMDCPhi", "FMDCMult", {}, {2, 3});
     manager_.SetCorrectionSteps("FMDC", confFMD);
     manager_.AddHisto1D("FMDC", {{"FMDCChannels", 1200, 0, 1200}}, "FMDCMult");
-    manager_.AddHisto2D("FMDC", {{"FMDCPhi", 20, 0, 2*TMath::Pi()},{"FMDCEta", 100, -4, 6}}, "FMDCMult");
+    manager_.AddHisto2D("FMDC", {{"FMDCPhi", 20, 0, 2*TMath::Pi()}, {"FMDCEta", 100, -4, 6}}, "FMDCMult");
     manager_.AddHisto1D("FMDC", {{"FMDCPhi", 20, 0, 2*TMath::Pi()}}, "FMDCMult");
 
     manager_.AddCut("FMDC", {"FMDCMult"}, [](double &mult) { return mult > 1e-6; });
   }
-
-
 
 //  Event selection configuration
   manager_.AddEventCut({"NTracks"}, [](const double &ntracks) { return ntracks > 0; });
@@ -288,13 +289,24 @@ void CorrectionTask::Process() {
   manager_.Reset();
   auto event = event_.Get();
   if (event->IsA()!=AliReducedEventInfo::Class()) return;
-  manager_.Process(DataFiller(event));
+  VAR::FillEventInfo(event, manager_.GetVariableContainer());
+  manager_.ProcessEvent();
+  manager_.FillChannelDetectors();
+  AliReducedTrackInfo *track = nullptr;
+  auto trackList = event->GetTracks();
+  auto ntracks = trackList->GetSize();
+  TIter next(trackList);
+  next.Reset();
+  while ((track = (AliReducedTrackInfo *) next())!=nullptr) {
+    VAR::FillTrackInfo(track, manager_.GetVariableContainer());
+    manager_.FillTrackingDetectors();
+  }
+  manager_.ProcessQnVectors();
 }
 
 void CorrectionTask::Finalize() {
   manager_.Finalize();
-  manager_.SaveHistograms(out_calibration_file_);
-  manager_.SaveTree(out_file_);
+  manager_.SaveOutput(out_calibration_file_,out_file_);
 }
 
 std::unique_ptr<TChain> CorrectionTask::MakeChain(std::string filename, std::string treename) {
