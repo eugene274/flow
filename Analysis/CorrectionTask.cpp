@@ -7,7 +7,6 @@
 #include <iostream>
 #include "QnCorrectionsLog.h"
 
-
 namespace Qn {
 
 CorrectionTask::CorrectionTask(std::string filelist, std::string incalib, std::string treename) :
@@ -95,30 +94,13 @@ void CorrectionTask::Initialize() {
           {0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 3., 3.5, 4., 5., 6., 8., 10.});
   Axis eta("TPCEta", {-0.8, -0.5, 0.5, 0.8});
 
-  auto cut_hybrid = [](const double &flag, const double &flagPlus) {
-    return flag==1 || flagPlus==1;
-  };
+  auto cut_hybrid = [](const double &flag, const double &flagPlus) { return flag==1 || flagPlus==1; };
   auto cut_eta = [](const double &eta) { return -0.8 < eta && eta < 0.8; };
   //Config of TPC corrections
-  auto confTPC = [](QnCorrectionsDetectorConfigurationBase *config) {
-    config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-//    auto recenter = new QnCorrectionsQnVectorRecentering();
-//    recenter->SetApplyWidthEqualization(true);
-//    config->AddCorrectionOnQnVector(recenter);
-  };
-  auto confTPCR = [](QnCorrectionsDetectorConfigurationBase *config) {
-    config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-//    auto recenter = new QnCorrectionsQnVectorRecentering();
-//    recenter->SetApplyWidthEqualization(true);
-//    config->AddCorrectionOnQnVector(recenter);
-  };
-  auto cut_filterbit = [](double &flag) {
-    return (((ULong_t) (flag)) & (ULong_t(1) << (23))) || (((ULong_t) (flag)) & (ULong_t(1) << (24)));
-  };
+  auto confTPC = [](DetectorConfiguration *config) { config->SetNormalization(QVector::Normalization::M); };
   // TPC pT-dependence
   manager_.AddDetector("TPC", DetectorType::TRACK, "TPCPhi", "Ones", {pt}, {2, 3, 4});
   manager_.AddCut("TPC", {"TPCHybrid", "TPCHybrid+"}, cut_hybrid);
-//  manager_.AddCut("TPC", {"TPCQualityFlags"}, cut_filterbit);
   manager_.AddCut("TPC", {"TPCEta"}, cut_eta);
   manager_.AddCut("TPC", {"TPCPt"}, [](const double &pt) { return pt > 0.2 && pt < 10.; });
   manager_.SetCorrectionSteps("TPC", confTPC);
@@ -128,33 +110,30 @@ void CorrectionTask::Initialize() {
   //TPC pT-integrated
   manager_.AddDetector("TPC_R", DetectorType::TRACK, "TPCPhi", "Ones", {}, {2, 3, 4});
   manager_.AddCut("TPC_R", {"TPCHybrid", "TPCHybrid+"}, cut_hybrid);
-//  manager_.AddCut("TPC_R", {"TPCQualityFlags"}, cut_filterbit);
   manager_.AddCut("TPC_R", {"TPCEta"}, cut_eta);
   manager_.AddCut("TPC_R", {"TPCPt"}, [](const double &pt) { return pt > 0.2 && pt < 10.; });
   manager_.AddCut("TPC_R", {"TPCNCls"}, [](const double &ncls) { return ncls > 70; });
-  manager_.SetCorrectionSteps("TPC_R", confTPCR);
+  manager_.SetCorrectionSteps("TPC_R", confTPC);
 
   //Config VZERO A- and C-side
   auto cut_mult = [](double &mult) {
-//    if (mult < 0.1) mult = 0;
-//    return true;
     return mult > 0.1;
   };
   //Config of VZERO A- and C-side corrections
-  auto confV0 = [](QnCorrectionsDetectorConfigurationBase *config) {
-    config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-    auto recenter = new QnCorrectionsQnVectorRecentering();
+  auto confV0 = [](DetectorConfiguration *config) {
+    config->SetNormalization(QVector::Normalization::M);
+    auto recenter = new Recentering();
     recenter->SetApplyWidthEqualization(true);
     config->AddCorrectionOnQnVector(recenter);
-    auto *V0Channels = new bool[32];
-    for (int ich = 0; ich < 32; ich++) V0Channels[ich] = kTRUE;
-    auto *channelGroups = new int[32];
+    auto V0Channels = new bool[32];
+    auto channelGroups = new int[32];
     for (int ich = 0; ich < 32; ich++) {
+      V0Channels[ich] = true;
       channelGroups[ich] = ich/8;
     }
-    ((QnCorrectionsDetectorConfigurationChannels *) config)->SetChannelsScheme(V0Channels, channelGroups, nullptr);
-    auto equal = new QnCorrectionsInputGainEqualization();
-    equal->SetEqualizationMethod(QnCorrectionsInputGainEqualization::GEQUAL_averageEqualization);
+    config->SetChannelsScheme(V0Channels, channelGroups);
+    auto equal = new GainEqualization();
+    equal->SetEqualizationMethod(GainEqualization::Method::AVERAGE);
     equal->SetUseChannelGroupsWeights(true);
     config->AddCorrectionOnInputData(equal);
   };
@@ -179,18 +158,12 @@ void CorrectionTask::Initialize() {
                       "V0CMultChannel");
 
 //   Config for ZDC A and ZDC C
-  auto confZDC = [](QnCorrectionsDetectorConfigurationBase *config) {
-    config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-    auto recenter = new QnCorrectionsQnVectorRecentering();
-//    recenter->SetApplyWidthEqualization(true);
+  auto confZDC = [](DetectorConfiguration *config) {
+    config->SetNormalization(QVector::Normalization::M);
+    auto recenter = new Recentering();
     config->AddCorrectionOnQnVector(recenter);
-    auto *channels = new bool[4];
-    for (int ich = 0; ich < 4; ich++) channels[ich] = kTRUE;
-    auto *channelGroups = new int[4];
-    for (int ich = 0; ich < 4; ich++) {
-      channelGroups[ich] = 0;
-    }
-    ((QnCorrectionsDetectorConfigurationChannels *) config)->SetChannelsScheme(channels, nullptr, nullptr);
+    auto channels = new bool[4]{true, true, true, true};
+    config->SetChannelsScheme(channels);
   };
   // ZDC A
   manager_.AddDetector("ZDCA", DetectorType::CHANNEL, "ZDCAPhi", "ZDCAMult", {}, {1});
@@ -205,9 +178,9 @@ void CorrectionTask::Initialize() {
   manager_.AddHisto1D("ZDCC", {{"ZDCCPhi", 4, -TMath::Pi(), TMath::Pi()}}, "ZDCCMult");
   manager_.AddCut("ZDCC", {"ZDCCMult"}, [](double &mult) { return mult > 100; });
 
-  auto confT0 = [](QnCorrectionsDetectorConfigurationBase *config) {
-    config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-    auto recenter = new QnCorrectionsQnVectorRecentering();
+  auto confT0 = [](DetectorConfiguration *config) {
+    config->SetNormalization(QVector::Normalization::M);
+    auto recenter = new Recentering();
     recenter->SetApplyWidthEqualization(true);
     config->AddCorrectionOnQnVector(recenter);
     auto *channels = new bool[12];
@@ -216,7 +189,7 @@ void CorrectionTask::Initialize() {
     for (int ich = 0; ich < 12; ich++) {
       channelGroups[ich] = 0;
     }
-    ((QnCorrectionsDetectorConfigurationChannels *) config)->SetChannelsScheme(channels, nullptr, nullptr);
+    config->SetChannelsScheme(channels);
   };
   // T0A
   manager_.AddDetector("T0A", DetectorType::CHANNEL, "T0APhi", "T0AMult", {}, {2, 3});
@@ -240,15 +213,16 @@ void CorrectionTask::Initialize() {
     manager_.AddVariable("FMDCMult", VAR::Variables::kFMDCWeight, 1200);
     manager_.AddVariable("FMDCEta", VAR::Variables::kFMDCEta, 1200);
 
-    auto confFMD = [](QnCorrectionsDetectorConfigurationBase *config) {
-      config->SetQVectorNormalizationMethod(QnCorrectionsQnVector::QVNORM_QoverM);
-      auto recenter = new QnCorrectionsQnVectorRecentering();
+    auto confFMD = [](DetectorConfiguration *config) {
+      config->SetNormalization(QVector::Normalization::M);
+      auto recenter = new Recentering();
       recenter->SetApplyWidthEqualization(true);
       config->AddCorrectionOnQnVector(recenter);
       auto *channels = new bool[1200];
       for (int ich = 0; ich < 1200; ich++) channels[ich] = kTRUE;
-      ((QnCorrectionsDetectorConfigurationChannels *) config)->SetChannelsScheme(channels, nullptr);
+      config->SetChannelsScheme(channels);
     };
+
     manager_.AddDetector("FMDA", DetectorType::CHANNEL, "FMDAPhi", "FMDAMult", {}, {2, 3});
     manager_.SetCorrectionSteps("FMDA", confFMD);
     manager_.AddHisto1D("FMDA", {{"FMDAChannels", 1200, 0, 1200}}, "FMDAMult");
@@ -294,7 +268,6 @@ void CorrectionTask::Process() {
   manager_.FillChannelDetectors();
   AliReducedTrackInfo *track = nullptr;
   auto trackList = event->GetTracks();
-  auto ntracks = trackList->GetSize();
   TIter next(trackList);
   next.Reset();
   while ((track = (AliReducedTrackInfo *) next())!=nullptr) {
@@ -306,7 +279,7 @@ void CorrectionTask::Process() {
 
 void CorrectionTask::Finalize() {
   manager_.Finalize();
-  manager_.SaveOutput(out_calibration_file_,out_file_);
+  manager_.SaveOutput(out_calibration_file_, out_file_);
 }
 
 std::unique_ptr<TChain> CorrectionTask::MakeChain(std::string filename, std::string treename) {

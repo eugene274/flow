@@ -5,10 +5,9 @@
 #ifndef FLOW_SIMPLETASK_H
 #define FLOW_SIMPLETASK_H
 
-#include <TChain.h>
-#include <TTreeReader.h>
-#include "DataContainer.h"
-#include "Correlation.h"
+#include "TChain.h"
+#include "TTreeReader.h"
+
 #include "CorrelationManager.h"
 
 #define VAR AliReducedVarManager

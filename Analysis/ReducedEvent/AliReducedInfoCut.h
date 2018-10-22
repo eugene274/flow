@@ -15,9 +15,9 @@ class AliReducedInfoCut : public TNamed {
   AliReducedInfoCut(const Char_t* name, const Char_t* title);
   virtual ~AliReducedInfoCut();
   
-  virtual Bool_t IsSelected(TObject* obj) {return kTRUE;};
-  virtual Bool_t IsSelected(TObject* obj, double* values) {return kTRUE;};
-  virtual Bool_t IsSelected(double* values) {return kTRUE;};
+  virtual Bool_t IsSelected(TObject* obj) {(void) obj; return kTRUE;};
+  virtual Bool_t IsSelected(TObject* obj, double* values) {(void) obj; (void) values;return kTRUE;};
+  virtual Bool_t IsSelected(double* values) {(void)values; return kTRUE;};
   
  protected: 
    

@@ -177,6 +177,7 @@ AliReducedVarManager::AliReducedVarManager() :
 //__________________________________________________________________
 AliReducedVarManager::AliReducedVarManager(const Char_t *name) :
     TObject() {
+  (void) name;
   std::cout << kNVars << std::endl;
   //
   // named constructor
@@ -353,6 +354,7 @@ void AliReducedVarManager::FillEventInfo(double *values) {
 
 //__________________________________________________________________
 void AliReducedVarManager::FillEventInfo(BASEEVENT *baseEvent, double *values, EVENTPLANE *eventF/*=0x0*/) {
+  (void) eventF;
   //
   // fill event wise info
   //

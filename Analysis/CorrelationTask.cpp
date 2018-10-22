@@ -11,8 +11,6 @@
 #include "AliReducedVarManager.h"
 #include "TTreeReaderValue.h"
 
-#include "DataContainerHelper.h"
-
 CorrelationTask::CorrelationTask(std::string filelist, std::string treename) :
     in_tree_(this->MakeChain(std::move(filelist), treename)),
     reader_(new TTreeReader(in_tree_.get())) {}
@@ -50,11 +48,11 @@ void CorrelationTask::Configure(Qn::CorrelationManager &a) {
 //  };
 
   // Set file names
-  a.SetESECalibrationFile("ese.root");
+//  a.SetESECalibrationFile("ese.root");
   a.SetOutputFile("corr.root");
 
   // ESE Configuration
-  a.AddESE("ZDCA, ZDCC", 1, 200);
+//  a.AddESE("ZDCA, ZDCC", 1, 200);
 
   // Add Detectors for Correlation
   a.AddQVectors("TPC, TPC_R, V0A, V0C, ZDCA, ZDCC");
@@ -62,8 +60,8 @@ void CorrelationTask::Configure(Qn::CorrelationManager &a) {
 
   // Add Eventvariables for correlation
   // Use Qn::Axis
-  a.AddEventVariable({"CentralityV0M", {0., 5., 10., 15.,20.,25.,30.,35.,40.,45.,50.}});
-  a.AddEventVariable({"VTXX", 10,0.04,0.1});
+  a.AddEventVariable({"CentralityV0M", {0.,5.,10.,20.,30.,40.,50.,60.,70.,80.}});
+//  a.AddEventVariable({"VTXX", 10,-0.1,0.1});
 //  a.AddEventVariable({"VTXZ", 10,-10,10});
 
 //  a.AddProjection("TPC_R","TPC_RR","");
@@ -76,8 +74,8 @@ void CorrelationTask::Configure(Qn::CorrelationManager &a) {
 //    a.AddCorrelation("TPCPT_V0C", "TPC, V0C", scalar, 0, Qn::Sampler::Method::NONE);
 ////
     a.AddCorrelation("TPC_V0A", "TPC_R, V0A", scalar, 0, Qn::Sampler::Method::NONE);
-//    a.AddCorrelation("TPC_V0C", "TPC_R, V0C", scalar, 0, Qn::Sampler::Method::NONE);
-//    a.AddCorrelation("V0A_V0C", "V0A, V0C", scalar, 0, Qn::Sampler::Method::NONE);
+    a.AddCorrelation("TPC_V0C", "TPC_R, V0C", scalar, 0, Qn::Sampler::Method::NONE);
+    a.AddCorrelation("V0A_V0C", "V0A, V0C", scalar, 0, Qn::Sampler::Method::NONE);
 
 //    a.AddCorrelation("TPC_T0A", "TPC_R, T0A", scalar, 10, Qn::Sampler::Method::BOOTSTRAP);
 //    a.AddCorrelation("TPC_T0C", "TPC_R, T0C", scalar, 10, Qn::Sampler::Method::BOOTSTRAP);

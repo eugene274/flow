@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 cmake_policy(SET CMP0048 NEW)
-project(flow VERSION 1)
+project(flowanalysis VERSION 1)
 
 add_subdirectory(ReducedEvent)
 

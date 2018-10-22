@@ -223,6 +223,7 @@ target_link_libraries(Correlation PUBLIC Base PRIVATE ${ROOT_LIBRARIES})
 
 #add_subdirectory(test)
 
+add_subdirectory(Analysis)
 # Install configuration
 
 install(DIRECTORY QnCorrections/include/ Base/include/ Correction/include/ Correlation/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

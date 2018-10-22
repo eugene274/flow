@@ -8,29 +8,18 @@
 #include <vector>
 #include <array>
 #include <random>
-#include "QnCorrectionsProfile3DCorrelations.h"
-#include "QnCorrectionsProfileCorrelationComponents.h"
-#include "QnCorrectionsDetectorConfigurationChannels.h"
-#include "QnCorrectionsDetectorConfigurationBase.h"
-#include "QnCorrectionsDetectorConfigurationTracks.h"
-#include "QnCorrectionsQnVectorRecentering.h"
-#include "QnCorrectionsQnVectorTwistAndRescale.h"
-#include "QnCorrectionsCutSetBit.h"
-#include "QnCorrectionsCutWithin.h"
-#include "QnCorrectionsInputGainEqualization.h"
-#include "QnCorrectionsQnVectorAlignment.h"
+
 #include "TFile.h"
 #include "TTree.h"
 #include "TTreeReader.h"
 
-#include "QnCorrectionsManager.h"
-#include "DataContainer.h"
-#include "EventInfo.h"
 #include "AliReducedEventInfo.h"
 #include "AliReducedVarManager.h"
 #include "AliReducedTrackInfo.h"
 #include "AliReducedBaseTrack.h"
+
 #include "CorrectionManager.h"
+
 
 #define VAR AliReducedVarManager
 
