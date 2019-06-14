@@ -296,4 +296,4 @@ install(FILES
 export(TARGETS Base Correction Correlation QnCorrections NAMESPACE Qn:: FILE QnTargets.cmake)
 export(PACKAGE Qn)
 
-
+add_subdirectory(analysis)

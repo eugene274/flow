@@ -104,8 +104,9 @@ void Correlation::CreateCorrelationContainer(const Correlation::DataContainers &
       auto axes = input.GetAxes();
       for (auto &axis : axes) {
         auto original_name = axis.Name();
-        if (!names_.empty()) { axis.SetName(std::to_string(i) + "_" + names_[i] + "_" + original_name); }
-        else { axis.SetName(std::to_string(i) + "_" + original_name); }
+//        if (!names_.empty()) { axis.SetName(std::to_string(i) + "_" + names_[i] + "_" + original_name); }
+//        else { axis.SetName(std::to_string(i) + "_" + original_name); }
+        axis.SetName(std::to_string(i) + "_" + original_name);
         data_correlation_.AddAxis(axis);
       }
       ++i;
