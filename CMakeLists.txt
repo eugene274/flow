@@ -13,7 +13,7 @@ if (APPLE)
 endif (APPLE)
 
 add_compile_options("-Wall" "-Wextra"
-        "$<$<CONFIG:RELEASE>:-O3;-march=native;-ftree-vectorize;-ffast-math>"
+        "$<$<CONFIG:RELEASE>:-O3;-ftree-vectorize;-ffast-math>"
         "$<$<CONFIG:DEBUG>:-O0;-O0>")
 if ("${CMAKE_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options("-stdlib=libc++")
